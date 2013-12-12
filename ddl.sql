@@ -99,14 +99,14 @@ create table Lattice_Parameters
 #mp-609465	aHR0cDovL3d3dy5	1991		binary phase diagram	full decomposition; 0-100 at. % Au	950 to 1070 °C	calculated		mp-609465
 
 create table Phase_Diagram
-  (MaterialID            char(9) not null,
+  (MaterialID            varcharchar(30) not null,
    PhaseDiagram          blob not null,
    PublicationYear       integer,
    DiagramType           varchar(30),
-   ConcentrationRange    varchar(50),
-   Temperature           varchar(20),
-   NatureOfInvestigation varchar(20),
-   DetailsID             char(9),
+   ConcentrationRange    varchar(30),
+   Temperature           varchar(30),
+   NatureOfInvestigation varchar(30),
+   DetailsID             varchar(30),
    primary key(MaterialID));
 
 #Diagram_Details									
@@ -114,16 +114,16 @@ create table Phase_Diagram
 #mp-609465	No		904518		Au-Cu alloy	Kexue Tongbao	Engl. Transl.	English		T[947-1067 °C] vs. Au conc.[0-100 at.%]	36/59	
 
 create table Diagram_Details
-  (MaterialID      char(9) not null,
+  (MaterialID      varchar(30) not null,
    APDICDiagram    tinyint(1),
-   UniqueID        char(9) not null,
-   Title           varchar(50),
-   Publication     varchar(50),
-   Language        varchar(20),
-   OriginalDiagram varchar(50),
-   OriginalScope   varchar(50),
-   OriginalSize    varchar(10),
-   Remarks         varchar(50),
+   UniqueID        varchar(30) not null,
+   Title           varchar(30),
+   Publication     varchar(30),
+   Language        varchar(30),
+   OriginalDiagram varchar(30),
+   OriginalScope   varchar(30),
+   OriginalSize    varchar(30),
+   Remarks         varchar(30),
    primary key(MaterialID));
 
 #Has_Auth	
@@ -131,16 +131,16 @@ create table Diagram_Details
 #mp-609465	609203
 
 create table Has_Auth
-  (DiagID     char(9) not null,
-   AuthID     char(9) not null);
+  (DiagID     varchar(30) not null,
+   AuthID     varchar(30) not null);
 
 #Diagram_Authors		
 #AuthID	Author		Affiliation
 #609203	Zheng W.T.	Jilin University, Department of Materials Science
 
 create table Diagram_Authors
-  (AuthID      char(9) not null,
+  (AuthID      varchar(30) not null,
    Author      varchar(30),
-   Affiliation varchar(40),
+   Affiliation varchar(30),
    primary key(AuthorID));
 
