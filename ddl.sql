@@ -92,7 +92,8 @@ create table Lattice_Parameters
    c(Å)       float(20),
    α(°)       integer,
    β(°)       integer,
-   γ(°)       integer);
+   γ(°)       integer,
+   primary key(MaterialID));
 
 #Phase_Diagram							
 #MaterialID	PhaseDiagram	PublicationYear	DiagramType		ConcentrationRange			Temperature	NatureOfInvestigation	DetailsID
@@ -107,7 +108,10 @@ create table Phase_Diagram
    Temperature           varchar(30),
    NatureOfInvestigation varchar(30),
    DetailsID             varchar(30),
-   primary key(MaterialID));
+   primary key(MaterialID),
+   foreign key(DetailsID)
+      references Diagram_Details
+      on delete cascade);
 
 #Diagram_Details									
 #MaterialID	APDICDiagram	UniqueID	Title		Publication	Language	OriginalDiagram	OriginalScope				OriginalSize	Remarks
@@ -132,7 +136,8 @@ create table Diagram_Details
 
 create table Has_Auth
   (DiagID     varchar(30) not null,
-   AuthID     varchar(30) not null);
+   AuthID     varchar(30) not null,
+   primary key(DiagID, AuthID));
 
 #Diagram_Authors		
 #AuthID	Author		Affiliation
@@ -142,5 +147,5 @@ create table Diagram_Authors
   (AuthID      varchar(30) not null,
    Author      varchar(30),
    Affiliation varchar(30),
-   primary key(AuthorID));
+   primary key(AuthID));
 
