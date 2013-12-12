@@ -1,4 +1,15 @@
-# DDL specs, second half
+#Lattice_Parameters						
+#MaterialID	a(Å)	b(Å)	c(Å)	α(°)	β(°)	γ(°)
+#mp-609465	5.379	5.379	15.125	90	90	120
+
+create table Lattice_Parameters
+  (MaterialID char(9) not null,
+   a(Å)       float(20),
+   b(Å)       float(20),
+   c(Å)       float(20),
+   α(°)       integer,
+   β(°)       integer,
+   γ(°)       integer);
 
 #Phase_Diagram							
 #MaterialID	PhaseDiagram	PublicationYear	DiagramType		ConcentrationRange			Temperature	NatureOfInvestigation	DetailsID
