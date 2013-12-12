@@ -1,10 +1,5 @@
 # DDL specs, second half
 
-# has struct info
-create table Has_Struct_Info
-  (MaterialID char(9) not null,
-   StructID   char(9) not null);
-
 # phase diagram
 create table Phase_Diagram
   (MaterialID            char(9) not null,
