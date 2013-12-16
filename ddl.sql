@@ -1,6 +1,6 @@
 #General_Info								
-#MaterialID	UnitCellFormula	FormationEnergyPAtom (eV)	Energy above hull (eV)	Decomposes to	FinalMagneticMoment (μ_B)	CellVolume (Å^3)	Density (g/cm^3)	RunType
-#mp-609465	Fe12O18		-1.2948				0.5366			Fe2O3		38				378.94			4.2	 		GGA+U
+#MaterialID	UnitCellFormula	FormationEnergyPAtom (eV)	Energy above hull (eV)	FinalMagneticMoment (μ_B)	CellVolume (Å^3)	Density (g/cm^3)	RunType
+#mp-609465	Fe12O18		-1.2948				0.5366			38				378.94			4.2	 		GGA+U
 
 DROP TABLE IF EXISTS General_Info;
 CREATE TABLE General_Info
@@ -8,7 +8,6 @@ CREATE TABLE General_Info
 UnitCellFormula VARCHAR(20),
 FormationEnergyPAtom FLOAT(20),
 EnergyAboveHull FLOAT(20),
-DecomposesTo VARCHAR(20),
 FinalMagneticMoment FLOAT(20),
 CellVolume FLOAT(20),
 Density FLOAT(20),
@@ -31,14 +30,13 @@ PRIMARY KEY (MaterialID)
 );
 
 #Structure_Info						
-#StructID	Element	BondValenceOxidationState	FracCoordsA	FracCoordsB	FracCoordsC	Coordination
-#2032		Fe	3				0.6575		0.624		0.2272		4
+#StructID	Element	FracCoordsA	FracCoordsB	FracCoordsC	Coordination
+#2032		Fe	0.6575		0.624		0.2272		4
 
 DROP TABLE IF EXISTS Structure_Info;
 CREATE TABLE Structure_Info
 (StructID INTEGER NOT NULL,
 Element VARCHAR(20),
-BondValenceOxidationState INTEGER,
 FracCoordsA FLOAT(20),
 FracCoordsB FLOAT(20),
 FracCoordsC FLOAT(20),
@@ -58,7 +56,7 @@ PRIMARY KEY (MaterialID, StructID)
 );
 
 #Lattice_Parameters						
-#MaterialID	a(Å)	b(Å)	c(Å)	α(°)	β(°)	γ(°)
+#MaterialID	a	b	c	α	β	γ
 #mp-609465	5.379	5.379	15.125	90	90	120
 
 drop table if exists Lattice_Parameters;
@@ -131,8 +129,8 @@ create table Diagram_Authors
    primary key(AuthID));
 
 #Material							
-#MaterialID	ChemicalFormula	SpaceGroup	BandGap (eV)	GenInfoID	SpaceGroupInfoID	LatticeID	PhaseDiagID
-#mp-609465	Fe2O3		P3		0		mp-609465	mp-609465		mp-609465	mp-609465
+#MaterialID	ChemicalFormula	SpaceGroup	BandGap (eV)	GenInfoID	SpaceGroupInfoID	StructInfoID	LatticeID	PhaseDiagID
+#mp-609465	Fe2O3		P3		0		mp-609465	mp-609465		mp-609465	mp-609465	mp-609465
 
 DROP TABLE IF EXISTS Material;
 CREATE TABLE Material
