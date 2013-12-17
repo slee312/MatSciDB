@@ -3,11 +3,15 @@
  *This class makes use of the open source, freely available
  *JSON interpreter from JSON.org by Douglas Crockford
  */
-package project.kpoints;
 
 import java.io.*;
 import java.net.*;
+
 import javax.net.ssl.HttpsURLConnection;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /********************NOTES*****************************
 API key generation needed; look into writing a API key request method?
