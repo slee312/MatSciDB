@@ -118,7 +118,21 @@ public class GetData {
 					materialID,materialID,materialID,materialID,materialID);
 			
 			bwriter.write(input);
-				
+			//this gets thermo data; however I can't find some of the necessary info in the response...
+			data = getInfo.getThermo(material.getString("pretty_formula"));
+			if (data.getBoolean("valid_response") == false) {
+				continue;
+			}
+			material = data.getJSONArray("response").getJSONObject(0);
+			
+			// Diagram_Details
+			input = String.format("INSERT INTO Diagram_Details (MaterialID, PhaseDiagram, PublicationYear, DiagramType, ConcentrationRange, Temperature,"
+					+ "NatureOfInvestigation, DetailsID) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\n\n", "","","","",
+					"","","","");
+			// Phase_Diagram
+			input = String.format("INSERT INTO Diagram_Details (MaterialID, Title, Publication, Language, OriginalDiagram, " +
+					"OriginalScope, OriginalSize, Remarks) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\n\n", "","","","",
+					"","","","");
 		}
 		
 		bwriter.close();

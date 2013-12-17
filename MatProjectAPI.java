@@ -7,8 +7,6 @@ package project.kpoints;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
-
 import javax.net.ssl.HttpsURLConnection;
 
 /********************NOTES*****************************
@@ -34,8 +32,7 @@ https://www.materialsproject.org/rest/v1/materials/
 
 public class MatProjectAPI {
 
-  @SuppressWarnings("unused")
-public static void main(String args[]) throws IOException, JSONException {
+  public static void main(String args[]) throws IOException, JSONException {
 	  //Sets up connection parameters
     String API_KEY = args[0];
     int param = Integer.parseInt(args[1]);
@@ -53,11 +50,13 @@ public static void main(String args[]) throws IOException, JSONException {
   }
   URI requestURI;
   URL requestURL;
+  String key;
 
   String base = "https://www.materialsproject.org/rest/v1/materials/";
 
   public MatProjectAPI(String key, int param) throws URISyntaxException {
     requestURI = new URI(base + "mp-" + param + "/vasp?API_KEY=" + key);
+    this.key = key;
   }
 //test!
   public URL getURL() throws MalformedURLException {
@@ -66,6 +65,15 @@ public static void main(String args[]) throws IOException, JSONException {
   
   public JSONObject getInfo() throws MalformedURLException, IOException, JSONException {
 	  
+	  HttpsURLConnection connection = (HttpsURLConnection) getURL().openConnection();
+	  JSONTokener rd = new JSONTokener(new InputStreamReader(connection.getInputStream()));
+	  
+	  JSONObject work = new JSONObject(rd);
+	  return work;
+  }
+  public JSONObject getThermo(String formula) throws MalformedURLException, IOException, JSONException, URISyntaxException {
+	  
+	  requestURI = new URI(base + formula + "/exp?API_KEY=" + key);
 	  HttpsURLConnection connection = (HttpsURLConnection) getURL().openConnection();
 	  JSONTokener rd = new JSONTokener(new InputStreamReader(connection.getInputStream()));
 	  

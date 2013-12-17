@@ -90,14 +90,12 @@ create table Phase_Diagram
       on delete cascade);
 
 #Diagram_Details									
-#MaterialID	APDICDiagram	UniqueID	Title		Publication	Language	OriginalDiagram	OriginalScope				OriginalSize	Remarks
-#mp-609465	No		904518		Au-Cu alloy	Kexue Tongbao	Engl. Transl.	English		T[947-1067 °C] vs. Au conc.[0-100 at.%]	36/59	
+#MaterialID	Title		Publication	Language	OriginalDiagram	OriginalScope				OriginalSize	Remarks
+#mp-609465	Au-Cu alloy	Kexue Tongbao	Engl. Transl.	English		T[947-1067 °C] vs. Au conc.[0-100 at.%]	36/59	
 
 drop table if exists Diagram_Details;
 create table Diagram_Details
   (MaterialID      varchar(30) not null,
-   APDICDiagram    tinyint(1),
-   UniqueID        varchar(30) not null,
    Title           varchar(30),
    Publication     varchar(30),
    Language        varchar(30),
