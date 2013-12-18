@@ -35,7 +35,7 @@ PRIMARY KEY (MaterialID)
 
 DROP TABLE IF EXISTS Structure_Info;
 CREATE TABLE Structure_Info
-(StructID INTEGER NOT NULL,
+(StructID VARCHAR(30) NOT NULL,
 Element VARCHAR(20),
 FracCoordsA FLOAT(20),
 FracCoordsB FLOAT(20),
@@ -46,17 +46,17 @@ PRIMARY KEY (StructID)
 
 #Has_Struct_Info	
 #MaterialID	StructID
-#mp-609465	2032
+#mp-609465	mp-609465-0
 
 DROP TABLE IF EXISTS Has_Struct_Info;
 CREATE TABLE Has_Struct_Info
 (MaterialID VARCHAR(30) NOT NULL,
-StructID INTEGER NOT NULL,
+StructID VARCHAR(30) NOT NULL,
 PRIMARY KEY (MaterialID, StructID)
 );
 
 #Lattice_Parameters						
-#MaterialID	a	b	c	α	β	γ
+#MaterialID	a	b	c	alpha	beta	gamma
 #mp-609465	5.379	5.379	15.125	90	90	120
 
 drop table if exists Lattice_Parameters;
@@ -65,9 +65,9 @@ create table Lattice_Parameters
    a       float(20),
    b       float(20),
    c       float(20),
-   α       integer,
-   β       integer,
-   γ       integer,
+   alpha   integer,
+   beta    integer,
+   gamma   integer,
    primary key(MaterialID));
 
 # DEPRECATED

@@ -1,57 +1,53 @@
 import java.io.*;
 
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import matsci.io.structure.CIF;
 import matsci.location.Vector;
 
 public class GetData {
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws Exception {
 		
 		int idGetter = 1000;
 		String runtype;
 		
-		try {
-		
 		System.out.printf("Using API Key: %s\n", args[0]);
 		File file = new File("output.sql");
 		File cif = new File("struct.cif");
-		
-		if (file.exists()) {
-			throw new Exception("Delete old file first.");
-		} else {
-			try {
-				file.createNewFile();
-			} catch (Exception e) {
-				throw new Exception ("Couldn't create file");
-			}
-		}
 		
 		FileWriter fwriter, cifwriter;
 		BufferedWriter bwriter, bcif;
 		
 		try {
 			fwriter = new FileWriter(file.getAbsoluteFile());
-			cifwriter = new FileWriter(cif.getAbsoluteFile());
 			bwriter= new BufferedWriter(fwriter);
-			bcif = new BufferedWriter(cifwriter);
 		} catch (Exception e) {
 			throw new Exception("Couldn't get file.");
 		}
 		
 		MatProjectAPI getInfo;
-		for (int i = 0; i < idGetter; i++) {
+		for (int i = 1; i < idGetter; i++) {
 			
+			cifwriter = new FileWriter(cif.getAbsoluteFile());
+			bcif = new BufferedWriter(cifwriter);
+
 			getInfo = new MatProjectAPI(args[0], i);
-			JSONObject data = getInfo.getInfo();
-			if (data.getBoolean("valid_response") == false) {
-				idGetter++;
-				continue;
+			JSONObject data;
+			InputStreamReader reader;
+			
+			try {
+				reader = getInfo.getInfo();
+				JSONTokener rd = new JSONTokener(reader);
+				data = new JSONObject(rd);
+			} catch (IOException e) {
+				  System.err.println("ID invalid, incrementing ID value and resending...");
+				  idGetter++;
+				  continue;
 			}
 			
 			JSONObject material = data.getJSONArray("response").getJSONObject(0);
-			
 			String materialID = "mp-" + i;
 			if (material.getBoolean("is_compatible"))
 				runtype = "GGA";
@@ -66,7 +62,7 @@ public class GetData {
 			
 			bwriter.write(input);
 			
-			int numStructInfos = material.getInt("nSites");
+			int numStructInfos = material.getInt("nsites");
 			//writes out CIF file for structural info
 			bcif.write(material.getString("cif"));
 			bcif.close();
@@ -77,15 +73,15 @@ public class GetData {
 			
 				String structID = materialID + "-" + j;
 				
-				// Structure_Info
+				// Has_Struct_Info
 				input = String.format("INSERT INTO Has_Struct_Info (MaterialID, StructID) VALUES('%s', '%s');\n\n", materialID, structID);
 							
 				bwriter.write(input);						
 				
 				double[] coords = struct.getSiteCoords(j).getArrayCopy();
-				// Has_Struct_Info
-				input = String.format("INSERT INTO General_Info (StructID, Element, FracCoordsA, FracCoordsB, FracCoordsC, " +
-						"Coordination) VALUES('%s', '%s', '%s', '%s', '%s', '%s');\n\n", structID, struct.getSiteSpecies(i,0),
+				// Structure_Info
+				input = String.format("INSERT INTO Structure_Info (StructID, Element, FracCoordsA, FracCoordsB, FracCoordsC, " +
+						"Coordination) VALUES('%s', '%s', '%s', '%s', '%s', '%s');\n\n", structID, struct.getSiteSpecies(j,0).getElementSymbol(),
 						coords[0],coords[1],coords[2],struct.getSiteOccupancy(j,0));
 				
 				bwriter.write(input);
@@ -94,14 +90,14 @@ public class GetData {
 			Vector a = struct.getConventionalVectors()[0];
 			Vector b = struct.getConventionalVectors()[1];
 			Vector c = struct.getConventionalVectors()[2];
-			// Lattice_Paramters, replace with greek letters once outside eclipse
-			input = String.format("INSERT INTO Lattice_Paramters (MaterialID, a, b, c, α, β, γ) " +
+			// Lattice_Parameters, replace with greek letters once outside eclipse
+			input = String.format("INSERT INTO Lattice_Parameters (MaterialID, a, b, c, alpha, beta, gamma) " +
 					"VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');\n\n", materialID, a.length(),b.length(),c.length(),
 					a.angleDegrees(b),b.angleDegrees(c),c.angleDegrees(a));
 			
 			bwriter.write(input);
 			
-			JSONObject symmetry = data.getJSONObject("spacegroup");
+			JSONObject symmetry = material.getJSONObject("spacegroup");
 			
 			// Space_Group_Info
 			input = String.format("INSERT INTO Space_Group_Info (MaterialID, CrystalSystem, Num, Hall, PointGroup) " +
@@ -114,20 +110,15 @@ public class GetData {
 			// Material
 			input = String.format("INSERT INTO Material (MaterialID, ChemicalFormula, SpaceGroup, BandGap, GenInfoID, SpaceGroupInfoID, " +
 					"StructInfoID, LatticeID, PhaseDiagID) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\n\n", materialID,
-					material.getString("pretty_formula"),symmetry.getString("Symbol"),material.getDouble("band_gap"),
+					material.getString("pretty_formula"),symmetry.getString("symbol"),material.getDouble("band_gap"),
 					materialID,materialID,materialID,materialID,materialID);
 			
 			bwriter.write(input);
-			
 		}
 		
 		bwriter.close();
 		
 		System.out.println("Done.");
-		
-		} catch (Exception e) {
-			System.err.println("Error occcured: " + e.getMessage());
-		}
 	}
 	
 }

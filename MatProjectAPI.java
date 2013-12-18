@@ -3,7 +3,6 @@
  *This class makes use of the open source, freely available
  *JSON interpreter from JSON.org by Douglas Crockford
  */
-
 import java.io.*;
 import java.net.*;
 
@@ -58,57 +57,24 @@ public class MatProjectAPI {
 
   String base = "https://www.materialsproject.org/rest/v1/materials/";
 
-  public MatProjectAPI(String key, int param) throws URISyntaxException {
-    requestURI = new URI(base + "mp-" + param + "/vasp?API_KEY=" + key);
+  public MatProjectAPI(String key, int param) throws URISyntaxException, UnsupportedEncodingException {
+	String URI = base + "mp-" + param + "/vasp?API_KEY=" + key;
+    requestURI = new URI(URI);
     this.key = key;
   }
-//test!
   public URL getURL() throws MalformedURLException {
     return requestURI.toURL(); 
   }
-  
-  public JSONObject getInfo() throws MalformedURLException, IOException, JSONException {
+  //open the connection to the specified URL and parse into a JSONObject
+  public InputStreamReader getInfo() throws MalformedURLException, IOException, JSONException {
 	  
 	  HttpsURLConnection connection = (HttpsURLConnection) getURL().openConnection();
-	  JSONTokener rd = new JSONTokener(new InputStreamReader(connection.getInputStream()));
+	  connection.setRequestMethod("GET");
+	  connection.setDoInput(true);
+	  connection.connect();
+	  InputStreamReader rd = new InputStreamReader(connection.getInputStream());
 	  
-	  JSONObject work = new JSONObject(rd);
-	  return work;
+	  return rd;
   }
-  public JSONObject getThermo(String formula) throws MalformedURLException, IOException, JSONException, URISyntaxException {
-	  
-	  requestURI = new URI(base + formula + "/exp?API_KEY=" + key);
-	  HttpsURLConnection connection = (HttpsURLConnection) getURL().openConnection();
-	  JSONTokener rd = new JSONTokener(new InputStreamReader(connection.getInputStream()));
-	  
-	  JSONObject work = new JSONObject(rd);
-	  return work;
-  }
-/*  I'll add these functions once I get the connection and response 
-working...
-
-  public Vector[] getCellVectors() {
-    return ;
-  }
-
-  public String getDescription() {
-    return ;
-  }
-
-  public Coordinates getSiteCoords(int index) {
-    return ;
-  }
-
-  public Species getSiteSpecies(int index) {
-    return ;
-  }
-
-  public boolean[] getVectorPeriodicity() {
-    return ;
-  }
-
-  public int numDefiningSites() {
-    return ;
-  }
-*/
+ 
 }
